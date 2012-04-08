@@ -1,5 +1,6 @@
 package org.jdhp.android.gpsrec;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -78,6 +79,19 @@ public class SphericalPoint {
 		return radians;
 	}
 	
+	public CartesianPoint toCartesian(SphericalPoint orig) {
+		double[] p1_rad = orig.getRadians();
+		double[] p2_rad = this.getRadians();
+		
+		double dist_phi = Math.abs(p2_rad[0] - p1_rad[0]);
+		double dist_theta = Math.abs(p2_rad[1] - p1_rad[1]);
+		
+		double dist_x = dist_phi * EARTH_RADIUS;
+		double dist_y = dist_theta * EARTH_RADIUS;
+		
+		return new CartesianPoint(dist_x, dist_y);
+	}
+	
 	///////////////////////////////////////////////////////////////////////////
 	
 	public static final long EARTH_RADIUS = 6371;  // TODO: KM -> CHANGE THE RADIUS UNIT TO CHANGE ALL UNITS AT ONCE !
@@ -128,7 +142,7 @@ public class SphericalPoint {
 	public static double speed(SphericalPoint p1, SphericalPoint p2) {
 		double dist = SphericalPoint.distance(p1, p2);
 		double time_sec = (p2.getDate().getTime() - p1.getDate().getTime()) / 1000.0;
-		return dist / time_sec;
+		return dist * 3600.0 / time_sec;
 	}
 	
 	public static double[] speeds(List<SphericalPoint> l) {
@@ -174,12 +188,14 @@ public class SphericalPoint {
 		return max;
 	}
 	
-	public static double[] pointToCartesian(SphericalPoint pt) {  // TODO : renvoyer un type CartesianPoint
-		return null;
-	}
-	
-	public static List<double[]> pointToCartesian(List<SphericalPoint> pt) {  // TODO : renvoyer un type List<CartesianPoint>
-		return null;
+	public static CartesianPoint[] pointToCartesian(List<SphericalPoint> sph_points, SphericalPoint orig) {
+		CartesianPoint[] cart_points = new CartesianPoint[sph_points.size()];
+		
+		for(int i=0 ; i < sph_points.size() ; i++) {
+			cart_points[i] = sph_points.get(i).toCartesian(orig);
+		}
+		
+		return cart_points;
 	}
 	
 }
