@@ -19,8 +19,8 @@ package org.jdhp.android.gpsrec;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
-
-import org.jdhp.android.gpsrec.R;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Context;
@@ -48,7 +48,9 @@ public class GPSRecordController extends Activity {
         final FileFormat file = new GpxFormat();
         final Timer timer = new Timer();
         
-        final DecimalFormat df = new DecimalFormat("#.######");
+        Locale locale = new Locale("en", "US");
+        DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols(locale);
+        final DecimalFormat decimalFormat = new DecimalFormat("#.######", decimalFormatSymbols);
         
         final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         
@@ -64,7 +66,10 @@ public class GPSRecordController extends Activity {
 	                	try {
 							file.open(GPSRecordController.this); // TODO ??!!
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
+//							AlertDialog.Builder builder = new AlertDialog.Builder(GPSRecordController.this);
+//							builder.setMessage(e.getMessage())
+//							       .setCancelable(false);
+//							AlertDialog alert = builder.create();
 							e.printStackTrace();
 						}
 	                } else {
@@ -72,17 +77,22 @@ public class GPSRecordController extends Activity {
 	                	try {
 							file.close();
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
+//							AlertDialog.Builder builder = new AlertDialog.Builder(GPSRecordController.this);
+//							builder.setMessage(e.getMessage())
+//							       .setCancelable(false);
+//							AlertDialog alert = builder.create();
 							e.printStackTrace();
 						}
 	                }
+            	} else {
+            		// TODO : display an error dialog
             	}
             }
         });
         
         // GPS Service
         if(locationManager != null) {
-	        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 6000, 0, new LocationListener() {
+	        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 6000, 0, new LocationListener() { // TODO
 				
 				public void onStatusChanged(String provider, int status, Bundle extras) {} // TODO !
 				
@@ -95,7 +105,7 @@ public class GPSRecordController extends Activity {
 					double longitude = location.getLongitude();
 					double altitude = location.getAltitude();
 					
-					location_label.setText(df.format(latitude) + " : " + df.format(longitude));
+					location_label.setText(decimalFormat.format(latitude) + " : " + decimalFormat.format(longitude));
 					
 					if(toggle_button.isChecked()) {
 						// Timer 
@@ -105,7 +115,10 @@ public class GPSRecordController extends Activity {
 			        	try {
 							file.append(latitude, longitude, altitude);
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
+//							AlertDialog.Builder builder = new AlertDialog.Builder(GPSRecordController.this);
+//							builder.setMessage(e.getMessage())
+//							       .setCancelable(false);
+//							AlertDialog alert = builder.create();
 							e.printStackTrace();
 						}
 					}

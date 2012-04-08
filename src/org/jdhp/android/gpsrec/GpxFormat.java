@@ -23,8 +23,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import android.content.Context;
 import android.os.Environment;
@@ -33,7 +35,7 @@ public class GpxFormat implements FileFormat {
 
 	private PrintWriter out;
 	
-	private final DecimalFormat decimalFormat = new DecimalFormat("#.######");
+	private final DecimalFormat decimalFormat = new DecimalFormat("#.######", new DecimalFormatSymbols(new Locale("en", "US")));
 	
 	private final Date date = new Date();
 	
@@ -80,17 +82,25 @@ public class GpxFormat implements FileFormat {
 			str.append("	<trk>\n");
 			str.append("		<trkseg>\n");
 			this.out.println(str.toString());
+		} else {
+			throw new IOException("Cannot write on external media.");
+			// TODO : display an error dialog
 		}
 	}
 
 	public void close() throws IOException {
-		StringBuilder str = new StringBuilder();
-		str.append("		</trkseg>\n");
-		str.append("	</trk>\n");
-		str.append("</gpx>\n");
-		this.out.println(str.toString());
-		
-		this.out.close();
+		if(this.isWritable()) {
+			StringBuilder str = new StringBuilder();
+			str.append("		</trkseg>\n");
+			str.append("	</trk>\n");
+			str.append("</gpx>\n");
+			this.out.println(str.toString());
+			
+			this.out.close();
+		} else {
+			throw new IOException("Cannot write on external media.");
+			// TODO : display an error dialog
+		}
 	}
 
 	public void append(double latitude,
