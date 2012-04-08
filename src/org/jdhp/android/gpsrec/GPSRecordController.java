@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Jérémie DECOCK <jd.jdhp@gmail.com>,
+ * Copyright (c) 2011,2012 Jérémie DECOCK <jd.jdhp@gmail.com>,
  * 
  * All right reserved.
  * 
@@ -20,12 +20,13 @@ package org.jdhp.android.gpsrec;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Context;
-import android.location.GpsSatellite;
-import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -44,11 +45,17 @@ public class GPSRecordController extends Activity {
         setContentView(R.layout.main);
         
         final TextView location_label = (TextView) findViewById(R.id.location);
+        final TextView distance_label = (TextView) findViewById(R.id.distance);
+        final TextView speed_label = (TextView) findViewById(R.id.speed);
+        final TextView mean_speed_label = (TextView) findViewById(R.id.mean_speed);
+        final TextView max_speed_label = (TextView) findViewById(R.id.max_speed);
         final TextView timer_label = (TextView) findViewById(R.id.timer);
         final ToggleButton toggle_button = (ToggleButton) findViewById(R.id.toggleButton);
         
         final FileFormat file = new GpxFormat();
         final Timer timer = new Timer();
+        
+        final List<SphericalPoint> pointList = new ArrayList<SphericalPoint>();
         
         Locale locale = new Locale("en", "US");
         DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols(locale);
@@ -62,6 +69,13 @@ public class GPSRecordController extends Activity {
             	if(locationManager != null) {
 	                if(toggle_button.isChecked()) {
 	                	// Do record
+	                	pointList.clear();
+	                	
+	                	distance_label.setText("dist: 0");
+	                	speed_label.setText("speed: 0");
+	                	mean_speed_label.setText("mean speed: 0");
+	                	max_speed_label.setText("max speed: 0");
+	                	
 	                	timer.restart();
 	                	timer_label.setText("00:00:00");
 	                	
@@ -124,19 +138,29 @@ public class GPSRecordController extends Activity {
 				public void onProviderDisabled(String provider) {} // TODO !
 				
 				public void onLocationChanged(Location location) {
-					double latitude = location.getLatitude();
-					double longitude = location.getLongitude();
-					double altitude = location.getAltitude();
+					SphericalPoint point = new SphericalPoint(location.getLatitude(), location.getLongitude(), location.getAltitude(), new Date());
 					
-					location_label.setText(decimalFormat.format(latitude) + " : " + decimalFormat.format(longitude));
+					location_label.setText(decimalFormat.format(point.getLatitude()) + " : " + decimalFormat.format(point.getLongitude()));
 					
 					if(toggle_button.isChecked()) {
+						pointList.add(point);
+						
 						// Timer 
 			        	timer_label.setText(timer.toString());
 			        	
+			        	distance_label.setText("dist: " + decimalFormat.format(SphericalPoint.distance(pointList)));
+			        	if(pointList.size() > 2) {
+			        		double speed = SphericalPoint.speed(pointList.get(pointList.size() - 2), pointList.get(pointList.size() - 1));
+			        		speed_label.setText("speed: " + decimalFormat.format(speed));
+			        	} else {
+			        		speed_label.setText("speed: 0");
+			        	}
+	                	mean_speed_label.setText("mean speed: " + decimalFormat.format(SphericalPoint.meanSpeed(pointList)));
+	                	max_speed_label.setText("max speed: " + decimalFormat.format(SphericalPoint.maxSpeed(pointList)));
+			        	
 						// Update the file
 			        	try {
-							file.append(latitude, longitude, altitude);
+							file.append(point);
 						} catch (IOException e) {
 //							AlertDialog.Builder builder = new AlertDialog.Builder(GPSRecordController.this);
 //							builder.setMessage(e.getMessage())

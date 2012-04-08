@@ -27,6 +27,6 @@ public interface FileFormat {
 	
 	public void close() throws IOException;
 	
-	public void append(double latitude, double longitude, double altitude) throws IOException;
+	public void append(SphericalPoint point) throws IOException;
 	
 }

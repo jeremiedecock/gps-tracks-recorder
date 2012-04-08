@@ -37,8 +37,6 @@ public class GpxFormat implements FileFormat {
 	
 	private final DecimalFormat decimalFormat = new DecimalFormat("#.######", new DecimalFormatSymbols(new Locale("en", "US")));
 	
-	private final Date date = new Date();
-	
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 	
 	private final SimpleDateFormat tzFormat = new SimpleDateFormat("Z");
@@ -61,8 +59,7 @@ public class GpxFormat implements FileFormat {
 	
 	public void open(Context context) throws IOException {
 		if(this.isWritable()) { // TODO : check if out is already open
-			this.date.setTime(System.currentTimeMillis());
-			String filename = this.fileNameFormat.format(this.date);
+			String filename = this.fileNameFormat.format(new Date());
 			
 			File file = new File(context.getExternalFilesDir(null), filename);
 			//FileOutputStream fileOutputStream = new FileOutputStream(file);
@@ -103,22 +100,17 @@ public class GpxFormat implements FileFormat {
 		}
 	}
 
-	public void append(double latitude,
-			double longitude,
-			double altitude) throws IOException {
-		
-		this.date.setTime(System.currentTimeMillis());
-		
+	public void append(SphericalPoint point) throws IOException {		
 		StringBuilder str = new StringBuilder();
 		str.append("			<trkpt ");
-		str.append("lat=\"" + this.decimalFormat.format(latitude) + "\" ");
-		str.append("lon=\"" + this.decimalFormat.format(longitude) + "\"");
+		str.append("lat=\"" + this.decimalFormat.format(point.getLatitude()) + "\" ");
+		str.append("lon=\"" + this.decimalFormat.format(point.getLongitude()) + "\"");
 		str.append(">\n");
 		str.append("				<time>");
-		str.append(this.dateFormat.format(this.date));
-		str.append(this.tzFormat.format(this.date).substring(0, 3)); // workaround to get xs:dateTime compatibility
+		str.append(this.dateFormat.format(point.getDate()));
+		str.append(this.tzFormat.format(point.getDate()).substring(0, 3)); // workaround to get xs:dateTime compatibility
 		str.append(":");                                             // workaround to get xs:dateTime compatibility
-		str.append(this.tzFormat.format(this.date).substring(3, 5)); // workaround to get xs:dateTime compatibility
+		str.append(this.tzFormat.format(point.getDate()).substring(3, 5)); // workaround to get xs:dateTime compatibility
 		str.append("</time>\n");
 		str.append("			</trkpt>\n");
 		this.out.println(str.toString());

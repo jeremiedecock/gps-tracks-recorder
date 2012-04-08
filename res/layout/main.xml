@@ -1,10 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	          android:layout_height="fill_parent"
-	          android:layout_width="fill_parent"
-	          android:orientation="vertical"
-	          android:id="@+id/linearLayout1" android:gravity="bottom">
-	<TextView android:text="@string/location_initial_format" android:layout_height="wrap_content" android:id="@+id/location" android:gravity="center_horizontal" android:layout_width="match_parent" android:layout_marginTop="20dip" android:layout_marginBottom="60dip" android:textSize="20dip"></TextView>
-	<TextView android:text="@string/timer_initial_format" android:id="@+id/timer" android:layout_width="match_parent" android:gravity="center_horizontal" android:layout_height="wrap_content" android:layout_marginTop="20dip" android:layout_marginBottom="20dip" android:textSize="30dip"></TextView>
-	<ToggleButton android:text="ToggleButton" android:layout_height="wrap_content" android:id="@+id/toggleButton" android:gravity="center_horizontal" android:layout_width="match_parent" android:layout_gravity="center_horizontal" android:layout_marginTop="20dip" android:textOn="@string/record_started" android:textOff="@string/record_stopped"></ToggleButton>
+    android:id="@+id/linearLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="bottom"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="60dip"
+        android:layout_marginTop="20dip"
+        android:gravity="center_horizontal"
+        android:text="@string/location_initial_format"
+        android:textSize="20dip" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/distance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dip"
+        android:layout_marginTop="5dip"
+        android:gravity="center_horizontal"
+        android:text="@string/distance_initial_format"
+        android:textSize="20dip" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/speed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dip"
+        android:layout_marginTop="5dip"
+        android:gravity="center_horizontal"
+        android:text="@string/speed_initial_format"
+        android:textSize="20dip" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/mean_speed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dip"
+        android:layout_marginTop="5dip"
+        android:gravity="center_horizontal"
+        android:text="@string/mean_speed_initial_format"
+        android:textSize="20dip" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/max_speed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dip"
+        android:layout_marginTop="5dip"
+        android:gravity="center_horizontal"
+        android:text="@string/max_speed_initial_format"
+        android:textSize="20dip" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/timer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dip"
+        android:layout_marginTop="20dip"
+        android:gravity="center_horizontal"
+        android:text="@string/timer_initial_format"
+        android:textSize="30dip" >
+    </TextView>
+
+    <ToggleButton
+        android:id="@+id/toggleButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dip"
+        android:gravity="center_horizontal"
+        android:text="ToggleButton"
+        android:textOff="@string/record_stopped"
+        android:textOn="@string/record_started" >
+    </ToggleButton>
+
 </LinearLayout>
