@@ -24,6 +24,8 @@ import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Context;
+import android.location.GpsSatellite;
+import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -92,6 +94,27 @@ public class GPSRecordController extends Activity {
         
         // GPS Service
         if(locationManager != null) {
+        	
+//        	// GpsStatusListener
+//        	locationManager.addGpsStatusListener(new GpsStatus.Listener() {
+//				
+//				public void onGpsStatusChanged(int event) {
+//					if(event == GpsStatus.GPS_EVENT_SATELLITE_STATUS) {
+//						GpsStatus gpsStatus = locationManager.getGpsStatus(null);
+//						Iterable<GpsSatellite> iterable = gpsStatus.getSatellites();
+//						
+//						int cpt = 0;
+//						for(GpsSatellite satellite : iterable) {
+//							System.out.println("- " + satellite.toString());
+//							cpt++;
+//						}
+//						System.out.println(cpt + " satellites found.");
+//					}
+//				}
+//			
+//        	});
+        	
+        	// LocationListener
 	        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 6000, 0, new LocationListener() { // TODO
 				
 				public void onStatusChanged(String provider, int status, Bundle extras) {} // TODO !
@@ -124,6 +147,7 @@ public class GPSRecordController extends Activity {
 					}
 				}
 			});
+	        
         }
     }
 }
