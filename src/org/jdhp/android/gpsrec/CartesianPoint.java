@@ -42,4 +42,9 @@ public class CartesianPoint {
 		this.z = z;
 	}
 
+	@Override
+	public String toString() {
+		return "CartesianPoint [x=" + this.x + ", y=" + this.y + ", z=" + this.z + "]";
+	}
+
 }

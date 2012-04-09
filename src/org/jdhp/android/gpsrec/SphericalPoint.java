@@ -92,8 +92,14 @@ public class SphericalPoint {
 		return new CartesianPoint(dist_x, dist_y);
 	}
 	
-	///////////////////////////////////////////////////////////////////////////
+	@Override
+	public String toString() {
+		return "SphericalPoint [latitude=" + this.latitude + ", longitude="
+				+ this.longitude + ", altitude=" + this.altitude + ", date=" + this.date + "]";
+	}
 	
+	///////////////////////////////////////////////////////////////////////////
+
 	public static final long EARTH_RADIUS = 6371;  // TODO: KM -> CHANGE THE RADIUS UNIT TO CHANGE ALL UNITS AT ONCE !
 	
 	public static double distance(SphericalPoint p1, SphericalPoint p2) { // TODO: consider altitude !!!
