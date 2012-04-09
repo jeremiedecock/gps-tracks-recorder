@@ -1,0 +1,14 @@
++ service
++ tab activity
++ print map
++ load map (+ gestion des err xml)
++ finaly (save xml)
++ print landmarks
++ add landmarks
+- boussole
+- exporter les chaines
+- choix de l'unité pour les distances : permettre de choisir miles ou km
+- mode panorama
+- améliorer la qualité de la projection (calcul de distance)
+- toujours afficher la vitesse instantanée
+- afficher cartes openstreetmap

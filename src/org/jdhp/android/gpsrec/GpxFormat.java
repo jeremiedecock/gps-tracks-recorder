@@ -92,7 +92,6 @@ public class GpxFormat implements FileFormat {
 			str.append("	</trk>\n");
 			str.append("</gpx>\n");
 			this.out.println(str.toString());
-			
 			this.out.close();
 		} else {
 			throw new IOException("Cannot write on external media.");
@@ -100,20 +99,25 @@ public class GpxFormat implements FileFormat {
 		}
 	}
 
-	public void append(SphericalPoint point) throws IOException {		
-		StringBuilder str = new StringBuilder();
-		str.append("			<trkpt ");
-		str.append("lat=\"" + this.decimalFormat.format(point.getLatitude()) + "\" ");
-		str.append("lon=\"" + this.decimalFormat.format(point.getLongitude()) + "\"");
-		str.append(">\n");
-		str.append("				<time>");
-		str.append(this.dateFormat.format(point.getDate()));
-		str.append(this.tzFormat.format(point.getDate()).substring(0, 3)); // workaround to get xs:dateTime compatibility
-		str.append(":");                                             // workaround to get xs:dateTime compatibility
-		str.append(this.tzFormat.format(point.getDate()).substring(3, 5)); // workaround to get xs:dateTime compatibility
-		str.append("</time>\n");
-		str.append("			</trkpt>\n");
-		this.out.println(str.toString());
+	public void append(SphericalPoint point) throws IOException {
+		if(this.isWritable()) {
+			StringBuilder str = new StringBuilder();
+			str.append("			<trkpt ");
+			str.append("lat=\"" + this.decimalFormat.format(point.getLatitude()) + "\" ");
+			str.append("lon=\"" + this.decimalFormat.format(point.getLongitude()) + "\"");
+			str.append(">\n");
+			str.append("				<time>");
+			str.append(this.dateFormat.format(point.getDate()));
+			str.append(this.tzFormat.format(point.getDate()).substring(0, 3)); // workaround to get xs:dateTime compatibility
+			str.append(":");                                             // workaround to get xs:dateTime compatibility
+			str.append(this.tzFormat.format(point.getDate()).substring(3, 5)); // workaround to get xs:dateTime compatibility
+			str.append("</time>\n");
+			str.append("			</trkpt>\n");
+			this.out.println(str.toString());
+		} else {
+			throw new IOException("Cannot write on external media.");
+			// TODO : display an error dialog
+		}
 	}
 
 }

@@ -59,7 +59,9 @@ public class GPSRecordController extends Activity {
         
         Locale locale = new Locale("en", "US");
         DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols(locale);
-        final DecimalFormat decimalFormat = new DecimalFormat("#.######", decimalFormatSymbols);
+        final DecimalFormat distDecimalFormat = new DecimalFormat("#.###", decimalFormatSymbols);
+        final DecimalFormat gpsDecimalFormat = new DecimalFormat("#.######", decimalFormatSymbols);
+        final DecimalFormat speedDecimalFormat = new DecimalFormat("#.##", decimalFormatSymbols);
         
         final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         
@@ -71,10 +73,10 @@ public class GPSRecordController extends Activity {
 	                	// Do record
 	                	pointList.clear();
 	                	
-	                	distance_label.setText("dist: 0");
-	                	speed_label.setText("speed: 0");
-	                	mean_speed_label.setText("mean speed: 0");
-	                	max_speed_label.setText("max speed: 0");
+	                	distance_label.setText(getString(R.string.ui_dist_label) + " 0 " + getString(R.string.dist_si));
+	                	speed_label.setText(getString(R.string.ui_speed_label) + " 0 " + getString(R.string.speed_si));
+	                	mean_speed_label.setText(getString(R.string.ui_mean_speed_label) + " 0 " + getString(R.string.speed_si));
+	                	max_speed_label.setText(getString(R.string.ui_max_speed_label) + " 0 " + getString(R.string.speed_si));
 	                	
 	                	timer.restart();
 	                	timer_label.setText("00:00:00");
@@ -140,7 +142,7 @@ public class GPSRecordController extends Activity {
 				public void onLocationChanged(Location location) {
 					SphericalPoint point = new SphericalPoint(location.getLatitude(), location.getLongitude(), location.getAltitude(), new Date());
 					
-					location_label.setText(decimalFormat.format(point.getLatitude()) + " : " + decimalFormat.format(point.getLongitude()));
+					location_label.setText(gpsDecimalFormat.format(point.getLatitude()) + " : " + gpsDecimalFormat.format(point.getLongitude()));
 					
 					if(toggle_button.isChecked()) {
 						pointList.add(point);
@@ -148,15 +150,26 @@ public class GPSRecordController extends Activity {
 						// Timer 
 			        	timer_label.setText(timer.toString());
 			        	
-			        	distance_label.setText("dist: " + decimalFormat.format(SphericalPoint.distance(pointList)));
+			        	distance_label.setText(getString(R.string.ui_dist_label) +
+			        	                       " " + distDecimalFormat.format(SphericalPoint.distance(pointList)) +
+			        	                       " " + getString(R.string.dist_si));
+			        	
 			        	if(pointList.size() > 2) {
 			        		double speed = SphericalPoint.speed(pointList.get(pointList.size() - 2), pointList.get(pointList.size() - 1));
-			        		speed_label.setText("speed: " + decimalFormat.format(speed));
+			        		speed_label.setText(getString(R.string.ui_speed_label) +
+			        				            " " + speedDecimalFormat.format(speed) +
+			        				            " " + getString(R.string.speed_si));
 			        	} else {
-			        		speed_label.setText("speed: 0");
+			        		speed_label.setText(getString(R.string.ui_speed_label) + " 0 " + getString(R.string.speed_si));
 			        	}
-	                	mean_speed_label.setText("mean speed: " + decimalFormat.format(SphericalPoint.meanSpeed(pointList)));
-	                	max_speed_label.setText("max speed: " + decimalFormat.format(SphericalPoint.maxSpeed(pointList)));
+	                	
+			        	mean_speed_label.setText(getString(R.string.ui_mean_speed_label) +
+	                			                           " " + speedDecimalFormat.format(SphericalPoint.meanSpeed(pointList)) +
+	                			                           " " + getString(R.string.speed_si));
+	                	
+			        	max_speed_label.setText(getString(R.string.ui_max_speed_label) +
+	                			                          " " + speedDecimalFormat.format(SphericalPoint.maxSpeed(pointList)) +
+	                			                          " " + getString(R.string.speed_si));
 			        	
 						// Update the file
 			        	try {
