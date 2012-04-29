@@ -102,6 +102,8 @@ public class SphericalPoint {
 
 	public static final long EARTH_RADIUS = 6371;  // TODO: KM -> CHANGE THE RADIUS UNIT TO CHANGE ALL UNITS AT ONCE !
 	
+	// Distances ////
+	
 	public static double distance(SphericalPoint p1, SphericalPoint p2) { // TODO: consider altitude !!!
 		double[] p1_rad = p1.getRadians();
 		double[] p2_rad = p2.getRadians();
@@ -137,7 +139,7 @@ public class SphericalPoint {
 	public static double distance(List<SphericalPoint> l) {
 		double[] distances = SphericalPoint.distances(l);
 
-		double sum = 0;
+		double sum = 0.0;
 		for(double distance : distances) {
 			sum += distance;
 		}
@@ -145,10 +147,52 @@ public class SphericalPoint {
 		return sum;
 	}
 	
-	public static double speed(SphericalPoint p1, SphericalPoint p2) {
+	// Durations ////
+	
+	public static double duration(SphericalPoint p1, SphericalPoint p2) {
+		double duration_sec = Math.abs(p2.getDate().getTime() - p1.getDate().getTime()) / 1000.0;
+		return duration_sec;
+	}
+	
+	public static double[] durations(List<SphericalPoint> l) {
+		double[] durations = null;
+		
+		if(l.size() > 1) {
+			durations = new double[l.size() - 1];
+			
+			for(int i=0 ; i<l.size()-1 ; i++) {
+				durations[i] = SphericalPoint.duration(l.get(i), l.get(i+1));
+			}
+		} else {
+			durations = new double[1];                     // TODO : or new double[0] ?
+			durations[0] = 0.0;
+		}
+		
+		return durations;
+	}
+	
+	public static double duration(List<SphericalPoint> l) {
+		double duration_sec = 0;
+		
+		if(l.size() > 1) {
+			duration_sec = SphericalPoint.duration(l.get(0), l.get(l.size() - 1));
+		}
+		
+		return duration_sec;
+	}
+	
+	// Speeds ////
+	
+	public static double speed(SphericalPoint p1, SphericalPoint p2) { // TODO: improve accuracy considering more points...
+		double speed = 0.0;
+		
 		double dist = SphericalPoint.distance(p1, p2);
-		double time_sec = (p2.getDate().getTime() - p1.getDate().getTime()) / 1000.0;
-		return dist * 3600.0 / time_sec;
+		double duration_sec = SphericalPoint.duration(p1, p2);
+		if(duration_sec > 0.0) {
+			speed = dist * 3600.0 / duration_sec;
+		}
+		
+		return speed;
 	}
 	
 	public static double[] speeds(List<SphericalPoint> l) {
@@ -157,7 +201,7 @@ public class SphericalPoint {
 		if(l.size() > 1) {
 			speeds = new double[l.size() - 1];
 			
-			for(int i=0 ; i<l.size() -1 ; i++) {
+			for(int i=0 ; i<l.size()-1 ; i++) {
 				speeds[i] = SphericalPoint.speed(l.get(i), l.get(i+1));
 			}
 		} else {
@@ -169,14 +213,15 @@ public class SphericalPoint {
 	}
 	
 	public static double meanSpeed(List<SphericalPoint> l) {
-		double[] speeds = SphericalPoint.speeds(l);
-
-		double sum = 0;
-		for(double speed : speeds) {
-			sum += speed;
-		}
+		double mean = 0.0;
 		
-		double mean = sum / l.size();
+		if(l.size() > 1) {
+			double dist = SphericalPoint.distance(l);
+			double duration_sec = SphericalPoint.duration(l);
+			if(duration_sec > 0.0) {
+				mean = dist * 3600.0 / duration_sec;
+			}
+		}
 		
 		return mean;
 	}
@@ -184,7 +229,7 @@ public class SphericalPoint {
 	public static double maxSpeed(List<SphericalPoint> l) {
 		double[] speeds = SphericalPoint.speeds(l);
 
-		double max = 0;
+		double max = 0.0;
 		for(double speed : speeds) {
 			if(speed > max) {
 				max = speed;
