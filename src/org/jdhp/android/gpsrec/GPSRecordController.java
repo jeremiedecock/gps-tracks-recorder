@@ -131,7 +131,8 @@ public class GPSRecordController extends Activity {
 //        	});
         	
         	// LocationListener
-	        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 6000, 0, new LocationListener() { // TODO
+        	//locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 6000, 0, new LocationListener() { // TODO
+	        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() { // TODO
 				
 				public void onStatusChanged(String provider, int status, Bundle extras) {} // TODO !
 				
