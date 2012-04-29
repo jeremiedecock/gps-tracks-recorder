@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="record_started">Stop</string>
+    <string name="record_stopped">Enregistrer</string>
+    <string name="location_initial_format">-</string>
+    <string name="distance_initial_format">Distance : -</string>
+    <string name="speed_initial_format">Vitesse : -</string>
+    <string name="mean_speed_initial_format">Vitesse moyenne : -</string>
+    <string name="max_speed_initial_format">Vitesse max. : -</string>
+    <string name="timer_initial_format">00:00:00</string>
+    <string name="app_name">GPS Track Recorder</string>
+    <string name="ui_dist_label">Distance : </string>
+    <string name="ui_speed_label">Vitesse : </string>
+    <string name="ui_mean_speed_label">Vitesse moyenne : </string>
+    <string name="ui_max_speed_label">Vitesse max. : </string>
+    <string name="dist_si">km</string>
+    <string name="dist_imperial">mi</string>
+    <string name="speed_si">km/h</string>
+    <string name="speed_imperial">mph</string>
+
+</resources>
